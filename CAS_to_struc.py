@@ -27,23 +27,22 @@ def cas_to_struc():
             res3 = cirpy.resolve(iupac_name,'smiles', ['name_by_opsin'])
             if res3 == None:
                 print(iupac_name,'no Structure')
+                # for compound in pcp.get_compounds(iupac_name,'name'):
+                #     print(compound.molecular_formula)
             else:
                 mol = Molecule(res3)
-
                 results['mw'] = mol.mw
                 results['formula'] = mol.formula
-
-                # stdinchi=mol.stdinchi
-                # stdinchikey= mol.stdinchikey
+                results['image_url'] = mol.image_url  # The url of a GIF image
+                results['twirl_url'] = mol.twirl_url  # The url of a TwirlyMol 3D viewer
+                results['stdinchi']=mol.stdinchi
+                results['stdinchikey']= mol.stdinchikey
                 # ficts = mol.ficts
                 # ficus = mol.ficus
                 # uuuuu =  mol.uuuuu
                 # hashisy=mol.hashisy
                 # sdf = mol.sdf
-                #
-                # image_url = mol.image_url  # The url of a GIF image
-                # twirl_url = mol.twirl_url  # The url of a TwirlyMol 3D viewer
-                #
+
                 # h_bond_donor_count = mol.h_bond_donor_count
                 # h_bond_acceptor_count =mol.h_bond_acceptor_count
                 # h_bond_center_count=mol.h_bond_center_count
@@ -59,9 +58,11 @@ def cas_to_struc():
         else:
             results_df = pd.DataFrame([results.values()],columns=results.keys())
             structure_df = structure_df.append(results_df,ignore_index=True)
-        print(structure_df.tail(5))
-        # for compound in pcp.get_compounds(res2,'name'):
-        #     print(compound.molecular_formula)
+        print(structure_df.tail(1))
+        if i == 50:
+            break
+
+
     structure_df.to_csv('structure.csv')
 if __name__ == '__main__':
     cas_to_struc()
