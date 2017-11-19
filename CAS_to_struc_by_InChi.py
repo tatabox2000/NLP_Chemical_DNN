@@ -27,50 +27,60 @@ property_list2 = ['cid', 'atom_stereo_count', 'atoms', 'bond_stereo_count', 'bon
                          'undefined_atom_stereo_count', 'undefined_bond_stereo_count', 'volume_3d', 'xlogp'
                          ]
 def cas_to_struc():
+    #df = pd.read_csv('.\\Data\\toxic_DB_debug.csv')
     df = pd.read_csv('.\\Data\\toxic_DB2.csv')
+
     # for i , cas in enumerate(df['CAS'].unique()):
     #     print(i,cas)
     structure_df = pd.DataFrame()
     for i,cas_number in enumerate(df['CAS'].unique()):
-        results = {}
-        #results['smiles'] = cirpy.resolve(cas_number,'smiles')
-        #iupac_name = cirpy.resolve(cas_number,'iupac_name')
-        iupac_name = cirpy.resolve(cas_number,'InChI')
 
-        results['cas_number']=cas_number
+        InChI = cirpy.resolve(cas_number,'InChI')
+
+        print(cas_number)
         #time.sleep(10)
 
-        if isinstance(iupac_name, list)== True:
-            iupac_name =iupac_name[0]
+        if isinstance(InChI, list)== True:
+            iupac_name =InChI[0]
         else:
             pass
         #iupac_name = iupac_name.replace('InChI=1/','')
-        results['iupac_name']=iupac_name
 
-        if iupac_name ==None:
-            print(iupac_name,'is None')
+        if InChI ==None:
+            print(InChI,'is None')
             results_temp_df = pd.DataFrame(columns=property_list2)
             num = 10000000000 + i
             data = pd.DataFrame({'cid': [num], 'CAS': [cas_number]})
             results_temp_df = results_temp_df.append(data)
-            # results_temp_df['cid']= 10000000000 +i
             results_temp_df.set_index('cid', inplace=True)
-            # results_temp_df['CAS']=cas_number
             print(results_temp_df)
 
-
         else:
-            print(iupac_name,'is True')
-            #results_temp_df = pcp.get_compounds(iupac_name, 'name', as_dataframe=True)
-            results_temp_df = pcp.get_compounds(iupac_name, 'inchi', as_dataframe=True)
+            print(InChI,'is True')
+            try:
+                results_temp_df = pcp.get_compounds(InChI, 'inchi', as_dataframe=True)
+
+            except:
+                print('Data is None')
+                iupac_name = cirpy.resolve(cas_number, 'iupac_name')
+
+                try:
+                    results_temp_df = pcp.get_compounds( iupac_name, 'iupac_name', as_dataframe=True)
+                except:
+                    print('Data and IUPAC name are None')
+                    results_temp_df = pd.DataFrame(columns=property_list2)
+                    num = 10000000000 + i
+                    data = pd.DataFrame({'cid': [num], 'CAS': [cas_number],'InChI':InChI, 'iupac_name':iupac_name})
+                    results_temp_df = results_temp_df.append(data)
+                    results_temp_df.set_index('cid', inplace=True)
+                    print(results_temp_df)
+
             if results_temp_df.empty == True:
                 #results_temp_df=pd.DataFrame(columns=property_list2)
                 num = 10000000000 +i
                 data = pd.DataFrame({'cid': [num], 'CAS': [cas_number]})
                 results_temp_df = results_temp_df.append(data)
-                #results_temp_df['cid']= 10000000000 +i
                 results_temp_df.set_index('cid',inplace=True)
-                #results_temp_df['CAS']=cas_number
                 print(results_temp_df)
 
             else:
@@ -80,27 +90,6 @@ def cas_to_struc():
             structure_df = results_temp_df
         else:
             structure_df = structure_df.append(results_temp_df)
-
-        # if i == 80:
-        #         structure_df.to_csv('cid.csv')
-        #         break
-
-            ##properties select ver
-            #for property in property_list:
-                # p = pcp.get_properties(property, iupac_name, 'name')
-                # results[property] = p[0][property]
-                # print(results.values(),results.keys())
-
-                # for compound in pcp.get_compounds(iupac_name,'name'):
-            #     print(compound.molecular_formula)
-        # if structure_df.empty == True:
-        #     structure_df = pd.DataFrame([results.values()],columns=results.keys())
-        # else:
-        #     results_df = pd.DataFrame([results.values()],columns=results.keys())
-        #     structure_df = structure_df.append(results_df,ignore_index=True)
-        # print(structure_df.tail(1))
-        # if i == 50:
-        #     break
 
     structure_df.to_csv('structure_result.csv')
 if __name__ == '__main__':
