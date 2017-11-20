@@ -5,16 +5,6 @@ import time
 from cirpy import Molecule
 import pubchempy as pcp
 
-property_list = ['MolecularFormula','MolecularWeight','CanonicalSMILES','IsomericSMILES','InChI','InChIKey',
-                        'IUPACName','XLogP','ExactMass','MonoisotopicMass','TPSA','Complexity','Charge',
-                        'HBondDonorCount','HBondAcceptorCount','RotatableBondCount','HeavyAtomCount',
-                        'IsotopeAtomCount','AtomStereoCount','DefinedAtomStereoCount','UndefinedAtomStereoCount',
-                        'BondStereoCount','DefinedBondStereoCount','UndefinedBondStereoCount','CovalentUnitCount',
-                        'Volume3D','XStericQuadrupole3D','YStericQuadrupole3D','ZStericQuadrupole3D','FeatureCount3D',
-                        'FeatureAcceptorCount3D','FeatureDonorCount3D','FeatureAnionCount3D','FeatureCationCount3D',
-                        'FeatureRingCount3D','FeatureHydrophobeCount3D','ConformerModelRMSD3D',
-                        'EffectiveRotorCount3D','ConformerCount3D'
-                        ]
 property_list2 = ['cid', 'atom_stereo_count', 'atoms', 'bond_stereo_count', 'bonds', 'cactvs_fingerprint',
                          'canonical_smiles', 'charge', 'complexity', 'conformer_id_3d', 'conformer_rmsd_3d',
                          'coordinate_type', 'covalent_unit_count', 'defined_atom_stereo_count',
@@ -92,5 +82,24 @@ def cas_to_struc():
             structure_df = structure_df.append(results_temp_df)
 
     structure_df.to_csv('structure_result.csv')
+
+def get_pic_from_cid():
+    import os
+    df = pd.read_csv('structure_result.csv')
+    i = 0
+    os.chdir('.//pic_cas')
+    for cid,cas in zip(df['cid'],df['CAS']):
+        file_name = cas + '.png'
+        print(i)
+        i += 1
+        cid = cid.astype(str)
+        print(file_name,cid,cas)
+        try:
+            pcp.download('PNG', file_name, cid, 'cid')
+            print('the picture is exist')
+        except:
+            print('pic is None')
+
 if __name__ == '__main__':
-    cas_to_struc()
+    #cas_to_struc()
+    get_pic_from_cid()
