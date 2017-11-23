@@ -102,4 +102,9 @@ def get_pic_from_cid():
 
 if __name__ == '__main__':
     #cas_to_struc()
+<<<<<<< HEAD
+    #get_pic_from_cid()
+    print(2662/3221)
+=======
     get_pic_from_cid()
+>>>>>>> 2a9a9fa43f7008f0da58b4e33730eec949bdf739
