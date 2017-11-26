@@ -13,15 +13,22 @@ def dif_pic():
     im =  im_Lab[:,:,1]
     lookUpTable = np.zeros((256, 1), dtype='uint8')
     for i in range(256):
-        if i<50:
+        if i<40:
             lookUpTable[i][0] = 0
         else:
-            lookUpTable[i][0] =  np.exp(i/30)
+            lookUpTable[i][0] =  np.exp(i/50+2.3)
     im = cv2.LUT(im, lookUpTable)
     cv2.imwrite('U.jpg',im)
     plt.imshow(im,cmap='gray', interpolation='nearest')
     plt.xticks([]), plt.yticks([])
     plt.show()
+def calc_log():
+    x =np.arange(-4,3,0.1)
+    y = 127/(np.log(127)+x)
+    plt.plot(x,y)
+    print(np.exp(127/40+1.69))
+    plt.show()
+
 
 def pic_curve():
     x = np.arange(0,255,1)
@@ -31,7 +38,7 @@ def pic_curve():
     plt.plot(x,y2)
     plt.ylim(0,255)
     plt.xlim(0,255)
-    fp = FontProperties(fname='C:\\WINDOWS\\Fonts\\msgothic.ttc', size=25)
+    fp = FontProperties(fname='C:\\WINDOWS\\Fonts\\msgothic.ttc', size=22)
     plt.legend(['補正関数','元の分布'],prop=fp)
 
     plt.show()
@@ -63,17 +70,18 @@ def pic_hist(im):
 
 if __name__ == '__main__':
     #dif_pic()
-    im = cv2.imread("C:\\Users\\tatab\\OneDrive\\NLP\\pic1.jpg")
-    im = pic_hist(im)
-
-    im2 = cv2.imread("C:\\Users\\tatab\\OneDrive\\NLP\\pic2.jpg")
-    im2 = pic_hist(im2)
-    fp = FontProperties(fname='C:\\WINDOWS\\Fonts\\msgothic.ttc', size=25)
-
-    plt.hist(im.flatten(),  bins=50,alpha=0.3,normed=True,color='r')
-    plt.hist(im2.flatten(),bins=50, alpha=0.3,normed=True,color='b')
-    plt.ylim(0,0.025)
-    plt.xlim(5,255)
-    plt.legend(['処理前','処理後'],prop=fp)
-    plt.show()
-    #pic_curve()
+    #calc_log()
+    # im = cv2.imread("C:\\Users\\tatab\\OneDrive\\NLP\\pic1.jpg")
+    # im = pic_hist(im)
+    #
+    # im2 = cv2.imread("C:\\Users\\tatab\\OneDrive\\NLP\\pic2.jpg")
+    # im2 = pic_hist(im2)
+    # fp = FontProperties(fname='C:\\WINDOWS\\Fonts\\msgothic.ttc', size=25)
+    #
+    # plt.hist(im.flatten(),  bins=50,alpha=0.3,normed=True,color='r')
+    # plt.hist(im2.flatten(),bins=50, alpha=0.3,normed=True,color='b')
+    # plt.ylim(0,0.025)
+    # plt.xlim(5,255)
+    # plt.legend(['処理前','処理後'],prop=fp)
+    # plt.show()
+    pic_curve()
