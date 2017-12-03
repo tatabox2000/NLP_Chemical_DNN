@@ -13,21 +13,25 @@ import numpy as np
 import math
 
 def calc_tanimoto():
-    df = pd.read_csv('connect_result.csv')
+    df = pd.read_csv('.\\Data\\MACCSKeys_tanimoto.csv')
     result_df = pd.DataFrame(index=df['CAS'])
     #fin1 = df['cactvs_fingerprint']
     fin1 =df['isomeric_smiles'].fillna('')
 
     for i,fin_temp1 in enumerate(fin1):
-        print(fin_temp1)
+        print(fin_temp1,i)
         col=[]
         if fin_temp1 =='':
             pass
         else:
             fin_temp1 =Chem.MolFromSmiles(fin_temp1)
-            fin_temp1 = AllChem.GetMACCSKeysFingerprint(fin_temp1)
+            if fin_temp1 == None:
+                pass
+            else:
+                fin_temp1 = AllChem.GetMACCSKeysFingerprint(fin_temp1)
+
             for j,fin_temp2 in enumerate(fin1):
-                if fin_temp2 =='':
+                if fin_temp1==None or fin_temp2 =='':
                     result = 'None'
                     col.append(result)
                 else:
@@ -46,7 +50,7 @@ def calc_tanimoto():
         except:
             result_col_df = pd.DataFrame({df['CAS'][i]:''},index=df['CAS'])
             result_df[df['CAS'][i]] = result_col_df
-        print(result_df.head())
+        #print(result_df.head())
     result_df.to_csv('MACCSKeys_tanimoto.csv')
         #result_df = result_df.append(result_col_df)
         #, columns = df['CAS'][i]
@@ -100,5 +104,7 @@ def calc_tanimoto():
     # fw = open("out.svg","w")
     # fw.write(svg)
     # fw.close()
+
+
 if __name__ == '__main__':
     calc_tanimoto()
