@@ -12,8 +12,8 @@ import pandas as pd
 import numpy as np
 import math
 
-def calc_tanimoto():
-    df = pd.read_csv('.\\Data\\MACCSKeys_tanimoto.csv')
+def calc_tanimoto(multi = None):
+    df = pd.read_csv('connect_result.csv')
     result_df = pd.DataFrame(index=df['CAS'])
     #fin1 = df['cactvs_fingerprint']
     fin1 =df['isomeric_smiles'].fillna('')
@@ -31,8 +31,11 @@ def calc_tanimoto():
                 fin_temp1 = AllChem.GetMACCSKeysFingerprint(fin_temp1)
 
             for j,fin_temp2 in enumerate(fin1):
-                if fin_temp1==None or fin_temp2 =='':
-                    result = 'None'
+                if multi == None and i >= j:
+                        result ='0'
+                        col.append(result)
+                elif fin_temp1==None or fin_temp2 =='':
+                    result = '0'
                     col.append(result)
                 else:
                     try:
@@ -42,7 +45,7 @@ def calc_tanimoto():
                         #print(result)
                         col.append(result)
                     except:
-                        result = 'None'
+                        result = '0'
                         col.append(result)
         try:
             result_col_df = pd.DataFrame({df['CAS'][i]:col},index=df['CAS'])
