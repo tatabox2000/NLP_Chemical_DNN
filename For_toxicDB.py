@@ -52,6 +52,7 @@ def read_and_change():
             max_count = max_pair[0][1]
 
             for k , v in count_dict.items():
+
                 weight = v/max_count
                 b = (k[0],k[1],weight)
                 edges.append(b)

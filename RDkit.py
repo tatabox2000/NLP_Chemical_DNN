@@ -18,28 +18,32 @@ def calc_tanimoto(multi = None):
     #fin1 = df['cactvs_fingerprint']
     fin1 =df['isomeric_smiles'].fillna('')
 
-    for i,fin_temp1 in enumerate(fin1):
+    for i,fin_temp1_ori in enumerate(fin1):
         print(fin_temp1,i)
         col=[]
         if fin_temp1 =='':
             pass
         else:
-            fin_temp1 =Chem.MolFromSmiles(fin_temp1)
+            fin_temp1 =Chem.MolFromSmiles(fin_temp1_ori)
             if fin_temp1 == None:
                 pass
             else:
                 fin_temp1 = AllChem.GetMACCSKeysFingerprint(fin_temp1)
+            trigger = 0
+            for j,fin_temp2_ori in enumerate(fin1):
+                # if multi == None and i >= j:
+                #         result ='0'
+                #         col.append(result)
+                if trigger == 0 and fin_temp1_ori ==  fin_temp2_ori:
+                    result =0
+                    col.append(result)
 
-            for j,fin_temp2 in enumerate(fin1):
-                if multi == None and i >= j:
-                        result ='0'
-                        col.append(result)
-                elif fin_temp1==None or fin_temp2 =='':
+                elif fin_temp1 == None or fin_temp2_ori =='':
                     result = '0'
                     col.append(result)
                 else:
                     try:
-                        fin_temp2 = Chem.MolFromSmiles(fin_temp2)
+                        fin_temp2 = Chem.MolFromSmiles(fin_temp2_ori)
                         fin_temp2= AllChem.GetMACCSKeysFingerprint(fin_temp2)
                         result = DataStructs.FingerprintSimilarity(fin_temp1,fin_temp2)
                         #print(result)
