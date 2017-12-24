@@ -25,8 +25,8 @@ def coor_csv2cluster(n = 500):
     # test = np.triu(test,k=1)
     # df = pd.DataFrame(test)
     df2 = pd.read_csv('MACCSKeys_tanimoto.csv',skiprows=1,header=None)
-    #n = df2.shape[0]
-    #print(n)
+    n = df2.shape[0]
+    print(n)
     df2 = df2.replace('None',0)
     df2 = df2.fillna(0)
     df2 = df2.where(df2.notnull(), 0)
@@ -62,7 +62,7 @@ def coor_csv2cluster(n = 500):
 
 
     spectral = cluster.SpectralClustering(
-        n_clusters=30, eigen_solver='arpack',
+        n_clusters=50, eigen_solver='arpack',
         affinity='precomputed')
     result = spectral.fit(df)
     y_pred = result.labels_.astype(np.int)
@@ -78,11 +78,25 @@ def coor_csv2cluster(n = 500):
 
     plt.subplot(3,1,3)
     sns.heatmap(df, fmt='g',cmap="coolwarm")
-    df['result'] = df3
+    df3 = df3.set_index(index)
+    df['cluster'] = df3
     #sns.heatmap(df)
+    save_df = df['cluster']
+
+    save_df.to_csv('tanimoto_cluster.csv')
 
     plt.show()
-    df.to_csv('tanimoto_cluster.csv')
+
+def connect_result():
+    df1 = pd.read_csv('tanimoto_cluster.csv',header=None)
+    df1 = df1.set_index(df1[0])
+    df2 = pd.read_csv('connect_result.csv',index_col='CAS')
+    df3 = pd.concat([df1, df2], axis=1)
+    df3 = df3.rename(columns={1 : 'cluster'})
+    df3 = df3.drop(0,axis=1)
+    print(df1.head(),df2.head(),df3)
+    df3.to_csv('cluster_name_and_tox_val.csv')
 
 if __name__ == '__main__':
     coor_csv2cluster()
+    connect_result()
