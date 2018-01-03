@@ -98,5 +98,5 @@ def connect_result():
     df3.to_csv('cluster_name_and_tox_val.csv')
 
 if __name__ == '__main__':
-    coor_csv2cluster()
+    #coor_csv2cluster()
     connect_result()
