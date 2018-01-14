@@ -16,7 +16,9 @@ import pylab as plt
 
 os.chdir('C:\\Users\\tatab\\OneDrive\\NLP')
 def make_pictures(multi = None):
-    df = pd.read_csv('cluster_name_and_tox_val.csv',dtype={'tox_median':'float'},sep=',')
+    result_df = pd.read_csv('cluster_name_and_tox_val.csv',dtype={'tox_median':'float'},sep=',')
+    #result_df =result_df.set_index('CAS')
+    print(result_df.index)
     dir_list = result_df['cluster'].unique()
     try:
         os.makedirs('pics')
@@ -30,7 +32,7 @@ def make_pictures(multi = None):
         except:
             pass
     extract = zip(result_df['CAS'],result_df['canonical_smiles'],result_df['cluster'],result_df['tox_median'])
-    print(result_df.loc['29082-74-4'])
+    #print(result_df.loc['29082-74-4'])
     for CAS,smiles,cluster,tox_median in extract:
         try:
             m = Chem.MolFromSmiles(smiles)
@@ -55,6 +57,7 @@ def cluster_var_hist():
         y = calc_df['tox_median']
         #print(calc_df['tox_median'],calc_df['cluster'])
         try:
+            plt.figure()
             plt.hist(y,bins=30)
             #calc_df.plot(y=['tox_median'],bins=50,kind = 'hist')
             plt.title('tox value histgram')

@@ -89,13 +89,16 @@ def coor_csv2cluster(n = 500):
     plt.show()
 
 def connect_result():
-    df1 = pd.read_csv('tanimoto_cluster.csv',header=None)
-    df1 = df1.set_index(df1[0])
+    #df1 = pd.read_csv('tanimoto_cluster.csv',header=None)
+    #df1 = df1.set_index(df1[0])
+    df1 = pd.read_csv('Louvain_cluster_0.75.csv',index_col='CAS')
+
+
     df2 = pd.read_csv('connect_result.csv',index_col='CAS')
     df2 = df2[['canonical_smiles', 'tox_mode', 'tox_median', 'tox_mean', 'tox_var', 'tox_std', 'tox_max', 'tox_min', 'tox_count', 'tox_cut']]
     df3 = pd.concat([df1, df2], axis=1)
-    df3 = df3.rename(columns={1 : 'cluster'})
-    df3 = df3.drop(0,axis=1)
+    # df3 = df3.rename(columns={1 : 'cluster'})
+    # df3 = df3.drop(0,axis=1)
     print(df1.head(),df2.head(),df3)
     df3.to_csv('cluster_name_and_tox_val.csv')
 
