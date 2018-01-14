@@ -1,2 +1,7 @@
 Data
 pic_cas
+*jpg
+pics
+*.csv
+*png
+pics/*

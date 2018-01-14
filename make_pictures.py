@@ -16,8 +16,7 @@ import pylab as plt
 
 os.chdir('C:\\Users\\tatab\\OneDrive\\NLP')
 def make_pictures(multi = None):
-    df = pd.read_csv('cluster_name_and_tox_val.csv')
-    result_df = df.set_index(df['CAS'])
+    df = pd.read_csv('cluster_name_and_tox_val.csv',dtype={'tox_median':'float'},sep=',')
     dir_list = result_df['cluster'].unique()
     try:
         os.makedirs('pics')
@@ -31,12 +30,15 @@ def make_pictures(multi = None):
         except:
             pass
     extract = zip(result_df['CAS'],result_df['canonical_smiles'],result_df['cluster'],result_df['tox_median'])
+    print(result_df.loc['29082-74-4'])
     for CAS,smiles,cluster,tox_median in extract:
         try:
             m = Chem.MolFromSmiles(smiles)
             AllChem.Compute2DCoords(m)
             name = '.\\' + str(cluster) + '\\' +str(tox_median)+'__'+ str(CAS) + '.png'
-            print(name)
+            #print(name)
+            if str(tox_median) == 'nan':
+                print(name)
             Draw.MolToFile(m, name)
         except:
             pass
@@ -45,24 +47,27 @@ def cluster_var_hist():
     result_df = df.set_index(df['CAS'])
     cluster_list = result_df['cluster'].unique()
     os.chdir('C:\\Users\\tatab\\OneDrive\\NLP\pics')
-    #for cluster in cluster_list:
-    for i in np.arange(1,2,1):
-        cluster = i
-        print(cluster)
+    for cluster in cluster_list:
+    #for i in np.arange(1,2,1):
+        #cluster = i
+        #print(cluster)
         calc_df = result_df[result_df['cluster'].isin([cluster])]
         y = calc_df['tox_median']
-        print(calc_df['tox_median'],calc_df['cluster'])
+        #print(calc_df['tox_median'],calc_df['cluster'])
         try:
             plt.hist(y,bins=30)
             #calc_df.plot(y=['tox_median'],bins=50,kind = 'hist')
             plt.title('tox value histgram')
             plt.ylabel('count')
             plt.xlabel('tox value')
-            name = '.\\' + str(cluster) + '\\' + str(cluster) + '__' + 'histgram.png'
+            #name = '.\\' + str(cluster) + '\\' + str(cluster) + '__' + 'histgram.png'
+            name = str(cluster) + '__' + 'histgram.png'
             print(name)
             plt.savefig(name)
-            plt.show()
+            #plt.show()
         except:
+            print(cluster)
+            print('cant')
             pass
 if __name__ == '__main__':
     #make_pictures()

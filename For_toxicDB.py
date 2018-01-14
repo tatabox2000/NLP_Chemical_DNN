@@ -60,7 +60,7 @@ def read_and_change():
     #print(Graph.edges(data=True))
     nx.write_gexf(Graph, "toxic_and_fish.gexf")
 
-def get_center_cut_bottom_and_top():
+def get_center_cut_bottom_and_top(cut = None):
     df = pd.read_csv('.\\Data\\toxic_DB2.csv')
     resut_list =['CAS', 'tox_mode', 'tox_median', 'tox_mean', 'tox_var', 'tox_std', 'tox_max', 'tox_min', 'tox_count', 'tox_cut']
     df_results = pd.DataFrame(columns=resut_list)
@@ -74,27 +74,50 @@ def get_center_cut_bottom_and_top():
         count = df_cas.shape[0]
         cut_num = 0
         if count == 1 :
-            pass
+            mean = df_cas['毒性値'].mean()
+            var = df_cas['毒性値'].var(ddof=1)
+            std = df_cas['毒性値'].std(ddof=1)
+            max = df_cas['毒性値'].max()
+            min = df_cas['毒性値'].min()
+            median = df_cas['毒性値'].median()
+            # mode = scipy.stats.mode(df_cas['毒性値'])
+            mode = df_cas['毒性値'].mode()
+            mode = mode.values.tolist()
+        elif count == 2:
+            mean = df_cas['毒性値'].mean()
+            var = df_cas['毒性値'].var(ddof=1)
+            std = df_cas['毒性値'].std(ddof=1)
+            max = df_cas['毒性値'].max()
+            min = df_cas['毒性値'].min()
+            median = df_cas['毒性値'].min()
+            # mode = scipy.stats.mode(df_cas['毒性値'])
+            mode = df_cas['毒性値'].mode()
+            mode = mode.values.tolist()
         else:
-            while df_cas['毒性値'].max() >= df_cas['毒性値'].min() * 1000:
-                cut_num += 1
-                df_cas = df_cas.ix[df_cas['毒性値'] !=df_cas['毒性値'].max()]
-                df_cas = df_cas.ix[df_cas['毒性値'] !=df_cas['毒性値'].min()]
-        mean = df_cas['毒性値'].mean()
-        var = df_cas['毒性値'].var(ddof=1)
-        std = df_cas['毒性値'].std(ddof=1)
-        max = df_cas['毒性値'].max()
-        min = df_cas['毒性値'].min()
-        median = df_cas['毒性値'].median()
-        #mode = scipy.stats.mode(df_cas['毒性値'])
-        mode = df_cas['毒性値'].mode()
-        mode = mode.values.tolist()
+            if cut is not None:
+                #irregular cut
+                while df_cas['毒性値'].max() >= df_cas['毒性値'].min() * 1000:
+                    cut_num += 1
+                    df_cas = df_cas.ix[df_cas['毒性値'] !=df_cas['毒性値'].max()]
+                    df_cas = df_cas.ix[df_cas['毒性値'] !=df_cas['毒性値'].min()]
+            else:
+                pass
+            mean = df_cas['毒性値'].mean()
+            var = df_cas['毒性値'].var(ddof=1)
+            std = df_cas['毒性値'].std(ddof=1)
+            max = df_cas['毒性値'].max()
+            min = df_cas['毒性値'].min()
+            median = df_cas['毒性値'].median()
+            #mode = scipy.stats.mode(df_cas['毒性値'])
+            mode = df_cas['毒性値'].mode()
+            mode = mode.values.tolist()
         if not mode:
             mode =''
         else:
             mode = mode[0]
         print(mode)
         df_calc = pd.DataFrame([[cas_name,mode,median,mean,var,std,max,min,count,cut_num]],columns=resut_list)
+
         df_results = df_results.append(df_calc)
         print(i,df_results.tail(1))
     df_results = df_results.set_index('CAS')

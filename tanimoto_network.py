@@ -46,14 +46,16 @@ def make_network():
                 node1.append(a[0])
                 node2.append(a[1])
                 weight = float(a[2]) *30
-                result.append((a[0],a[1],weight))
+                if weight == 0.0:
+                    pass
+                else:
+                    result.append((a[0],a[1],weight))
         node1= set(node1)
         node2 = set(node2)
-        nodes = list(node2 | node1)
         Graph.add_nodes_from(nodes)
         Graph.add_weighted_edges_from(result)
     # #print(Graph.edges(data=True))
-    nx.write_gexf(Graph, "tanimoto_.gexf")
+    # nx.write_gexf(Graph, "tanimoto_.gexf")
 
 if __name__ == '__main__':
     make_network()
