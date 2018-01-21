@@ -75,7 +75,7 @@ def eigenvalue(df= None):
     print(nodes)
     cas_numbers=[]
     for cas_index in nodes:
-       cas_numbers.append(index[cas_index])
+       cas_numbers.append(index[cas_index-1])
     partition =community.best_partition(Graph)
     pos = nx.spring_layout(Graph,k=0.5)
     num = list(partition.keys())
@@ -90,23 +90,23 @@ def eigenvalue(df= None):
     print(result_df)
 
     print(partition)
-    # color_list=['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
-    # for cluster in set(partition.values()):
-    #     list_nodes = [nodes for nodes in partition.keys() if partition[nodes]==cluster]
-    #     print(cluster)
-    #     if cluster > 10:
-    #         color ='C9'
-    #     else:
-    #         color =color_list[cluster]
-    #     nx.draw_networkx_nodes(Graph,pos,list_nodes,node_size=(cluster+1)*200,node_color=color)
-    #     nx.draw_networkx_labels(Graph, pos)
-    #     nx.draw_networkx_edges(Graph,pos)
-    #     print('now drawing')
-    # plt.show()
-    #print(result)
-    #nx.write_gexf(Graph, "test_matrix.gexf")
+    color_list=['C0', 'C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8', 'C9']
+    for cluster in set(partition.values()):
+        list_nodes = [nodes for nodes in partition.keys() if partition[nodes]==cluster]
+        print(cluster)
+        if cluster > 10:
+            color ='C9'
+        else:
+            color =color_list[cluster]
+        nx.draw_networkx_nodes(Graph,pos,list_nodes,node_size=(cluster+1)*200,node_color=color)
+        nx.draw_networkx_labels(Graph, pos)
+        nx.draw_networkx_edges(Graph,pos)
+        print('now drawing')
+    plt.show()
+    print(result)
+    nx.write_gexf(Graph, "test_matrix.gexf")
 
     #print(la,v)
 if __name__ == '__main__':
     df = pd.read_csv('MACCSKeys_tanimoto.csv', skiprows=1, header=None)
-    eigenvalue(df)
+    eigenvalue()
