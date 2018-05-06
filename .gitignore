@@ -4,4 +4,7 @@ pic_cas
 pics
 *.csv
 *png
+*svg
 pics/*
+CIRpy-master/*
+*.idea/*
