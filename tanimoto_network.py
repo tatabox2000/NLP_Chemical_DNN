@@ -1,11 +1,11 @@
 import pandas as pd
 import numpy as np
 from numpy import nan
+import pubchempy as pcp
 
 def make_network():
     import networkx as nx
     import math
-
     df = pd.read_csv('.\\Data\\MACCSKeys_tanimoto.csv',index_col='CAS')
     df2 = pd.read_csv('connect_result.csv',index_col='CAS')
     df2['names'] = df2['tox_median'].astype(str)+'_'+df2['iupac_name']

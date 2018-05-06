@@ -74,4 +74,4 @@ def cluster_var_hist():
             pass
 if __name__ == '__main__':
     #make_pictures()
-    cluster_var_hist()
+    #cluster_var_hist()

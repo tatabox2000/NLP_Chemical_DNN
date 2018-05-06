@@ -21,7 +21,8 @@ def eigenvalue(df= None):
                       [0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1],
                       [0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0]
         ])
-        index = np.arange(1,A.shape[0]+1,1)
+        index = np.arange(0,A.shape[0],1)
+        print(index)
         df = pd.DataFrame(A,index=index,columns=index)
         la, v = np.linalg.eig(A)
         # print(la,v)
@@ -35,7 +36,6 @@ def eigenvalue(df= None):
     else:
         df2 = df
         n = df2.shape[0]
-        print(n)
         df2 = df2.replace('None', 0)
         df2 = df2.replace('nan', 0)
         df2 = df2.fillna(0)
@@ -50,6 +50,7 @@ def eigenvalue(df= None):
     # plt.show()
 
     Graph = nx.Graph()
+    print(np.show_config())
 
     for i ,col in enumerate(df.columns) :
         names = np.repeat(df.index[i],df.index.shape[0])
@@ -59,6 +60,7 @@ def eigenvalue(df= None):
         node2 = []
         for j, a in enumerate(pair):
                 weight = float(a[2])
+                #if weight > 0:
                 if weight < 0.75:
                     pass
                 else:
@@ -75,7 +77,7 @@ def eigenvalue(df= None):
     print(nodes)
     cas_numbers=[]
     for cas_index in nodes:
-       cas_numbers.append(index[cas_index-1])
+       cas_numbers.append(index[cas_index])
     partition =community.best_partition(Graph)
     pos = nx.spring_layout(Graph,k=0.5)
     num = list(partition.keys())
@@ -94,7 +96,7 @@ def eigenvalue(df= None):
     for cluster in set(partition.values()):
         list_nodes = [nodes for nodes in partition.keys() if partition[nodes]==cluster]
         print(cluster)
-        if cluster > 10:
+        if cluster >= 10:
             color ='C9'
         else:
             color =color_list[cluster]
@@ -108,5 +110,6 @@ def eigenvalue(df= None):
 
     #print(la,v)
 if __name__ == '__main__':
-    df = pd.read_csv('MACCSKeys_tanimoto.csv', skiprows=1, header=None)
+    #df = pd.read_csv('MACCSKeys_tanimoto.csv', skiprows=1, header=None)
     eigenvalue()
+    #eigenvalue(df)
